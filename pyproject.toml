@@ -1,0 +1,16 @@
+[project]
+name = "notes-retriever"
+version = "0.1.0"
+description = "This project aims to help long notes writers to locate previous scripts written and drown in massive texts"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "docx>=0.2.4",
+    "faiss-cpu>=1.11.0",
+    "pdfreader>=0.1.15",
+    "processfiles>=0.1.4",
+    "pypdf>=5.5.0",
+    "python-docx>=1.1.2",
+    "streamlit>=1.45.1",
+    "transformers>=4.51.3",
+]

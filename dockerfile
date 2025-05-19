@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app/
 COPY app.py /app
+COPY vector_DB.py /app
+COPY llm_interaction.py /app
+COPY doc_preprocessing.py /app
 COPY pyproject.toml /app
 COPY uv.lock /app
 

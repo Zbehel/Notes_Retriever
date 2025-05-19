@@ -11,6 +11,8 @@ dependencies = [
     "processfiles>=0.1.4",
     "pypdf>=5.5.0",
     "python-docx>=1.1.2",
+    "sentence-transformers>=4.1.0",
     "streamlit>=1.45.1",
+    "torch==2.2.0",
     "transformers>=4.51.3",
 ]

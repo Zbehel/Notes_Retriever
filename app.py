@@ -1,5 +1,5 @@
 import streamlit as st
-from doc_preprocessing import process_files
+from doc_preprocessing import process_files, get_embeddings
 from vector_DB import VectorDatabase  # Import the class
 from llm_interaction import get_answer
 
@@ -22,7 +22,7 @@ def main():
         vector_database.add_data(all_embeddings, all_chunks, chunks_metadata) # use the method
 
         st.session_state.files_processed = True
-
+    
     if query:
         results = process_query(query)
         display_results(results)

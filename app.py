@@ -51,7 +51,7 @@ def display_results(results):
     for result in (results):
         if result['score'] < 0.5:
             st.subheader(f"Réponse {cpt+1} :")
-            st.write(f"Source File: {result['file_name']}, Chunk: {result['chunk_index']}, Score: %.2f{1-result['score']*100}%")
+            st.write(f"Source File: {result['file_name']}, Chunk: {result['chunk_index']}, Score: {round((1-result['score'])*100,2)}%")
             st.subheader("Citations depuis le document :")
             st.write(normalize_line_breaks(result["chunk_text"]))
             st_copy_to_clipboard(normalize_line_breaks(result["chunk_text"]))

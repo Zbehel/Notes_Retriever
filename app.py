@@ -1,4 +1,7 @@
 import streamlit as st
+from st_copy_to_clipboard import st_copy_to_clipboard
+import re
+import numpy as np
 from doc_preprocessing import process_files, get_embeddings
 from vector_DB import VectorDatabase  # Import the class
 from llm_interaction import get_answer
@@ -31,18 +34,28 @@ def process_query(query):
     if vector_database.is_empty(): #Use the method
         return "Please upload files first."
 
-    query_embedding = get_embeddings([query])[0]
-    results = vector_database.query(query_embedding, k=3) # use the method
+    # query_embedding = get_embeddings([query])[0]
+    # results = vector_database.query(query_embedding, k=3) # use the method
+    query_embedding = get_embeddings([query])[0]  # Get the embedding for the query
+    results = vector_database.query(query_embedding, k=3)  # Get the top 2 results
+
     return results
 
+def normalize_line_breaks(text):
+    # text = text.replace("\n", "  \n ")
+    # text = text.replace('\n', '  \n ')
+    text = text.replace("\\n", "  \n ")
+
+    return text
+
 def display_results(results):
-    for result in results:
-        st.subheader("Answer")
-        st.write(result["answer"])
-        st.subheader("Quote from Document")
-        st.write(result["chunk_text"])
-        st.subheader("Source")
-        st.write(f"File: {result['file_name']}, Chunk: {result['chunk_index']}")
+       for i, result in enumerate(results):
+        st.subheader(f"Réponse {i+1} :")
+        st.write(f"Source File: {result['file_name']}, Chunk: {result['chunk_index']}")
+        st.subheader("Citations depuis le document :")
+        st.write(normalize_line_breaks(result["chunk_text"]))
+        st_copy_to_clipboard(normalize_line_breaks(result["chunk_text"]))
+
 
 if __name__ == "__main__":
     main()

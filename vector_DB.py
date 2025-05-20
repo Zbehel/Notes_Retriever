@@ -46,6 +46,8 @@ import numpy as np
 import streamlit as st
 from typing import List, Dict, Optional
 
+from doc_preprocessing import process_files 
+
 class VectorDatabase:
     """
     A class to manage a vector database using FAISS for efficient similarity search.
@@ -79,7 +81,7 @@ class VectorDatabase:
         # Ensure embeddings are numpy arrays
         embeddings = [np.array(emb) for emb in embeddings]
 
-        if self.dimension is 0:
+        if self.dimension == 0:
             self.dimension = embeddings[0].shape[0]
             self.index = faiss.IndexFlatL2(self.dimension)  # Use L2 distance
         elif self.dimension != embeddings[0].shape[0]:
@@ -115,7 +117,7 @@ class VectorDatabase:
         # Ensure query_embedding is a numpy array
         query_embedding = np.array(query_embedding, dtype=np.float32).reshape(1, -1)  # Reshape for FAISS
 
-        _, indices = self.index.search(query_embedding, k)
+        _, indices = self.index.search(query_embedding, k=k)
         results = []
         for i in indices[0]:
             chunk_text = self.chunks[i]
@@ -140,25 +142,27 @@ if __name__ == "__main__":
     # This part is for testing the VectorDatabase class.
     #  It will only run if you execute this file directly: python vector_database.py
 
-    # Create some dummy data
-    embeddings = [
-        np.array([1.0, 2.0, 3.0]),
-        np.array([4.0, 5.0, 6.0]),
-        np.array([7.0, 8.0, 9.0]),
-        np.array([10.0, 11.0, 12.0]),
-    ]
-    chunks = [
-        "This is chunk 1 from file A.",
-        "This is chunk 2 from file A.",
-        "This is chunk 1 from file B.",
-        "This is chunk 2 from file B.",
-    ]
-    chunks_metadata = [
-        {"file_name": "file_a.pdf", "chunk_index": 0},
-        {"file_name": "file_a.pdf", "chunk_index": 1},
-        {"file_name": "file_b.docx", "chunk_index": 0},
-        {"file_name": "file_b.docx", "chunk_index": 1},
-    ]
+    # # Create some dummy data
+    # embeddings = [
+    #     np.array([1.0, 2.0, 3.0]),
+    #     np.array([4.0, 5.0, 6.0]),
+    #     np.array([7.0, 8.0, 9.0]),
+    #     np.array([10.0, 11.0, 12.0]),
+    # ]
+    # chunks = [
+    #     "This is chunk 1 from file A.",
+    #     "This is chunk 2 from file A.",
+    #     "This is chunk 1 from file B.",
+    #     "This is chunk 2 from file B.",
+    # ]
+    # chunks_metadata = [
+    #     {"file_name": "file_a.pdf", "chunk_index": 0},
+    #     {"file_name": "file_a.pdf", "chunk_index": 1},
+    #     {"file_name": "file_b.docx", "chunk_index": 0},
+    #     {"file_name": "file_b.docx", "chunk_index": 1},
+    # ]
+    dummy_files = ['/Users/zac/Downloads/Janna/verbatimprocs/FZ- revenante - sept24.docx']
+    chunks, embeddings, chunks_metadata = process_files(dummy_files)
 
     # 1. Initialize the VectorDatabase
     vector_db = VectorDatabase(dimension=embeddings[0].shape[0]) # Initialize with dimension
@@ -168,7 +172,7 @@ if __name__ == "__main__":
     print("Data added to VectorDatabase.")
 
     # 3. Perform a query
-    query_embedding = np.array([2.0, 3.0, 4.0])
+    query_embedding = np.random.rand(embeddings[0].shape[0]).astype(np.float32)  # Random query embedding
     results = vector_db.query(query_embedding, k=2)  # Get the top 2 results
 
     print("\nQuery results:")
@@ -185,7 +189,7 @@ if __name__ == "__main__":
     vector_db2.add_data(embeddings, chunks, chunks_metadata)
     print("\nData added to VectorDatabase2 (without initial dimension).")
 
-    query_embedding_2 = np.array([8.0, 9.0, 10.0])
+    query_embedding_2 = np.random.rand(embeddings[0].shape[0]).astype(np.float32)  # Random query embedding
     results_2 = vector_db2.query(query_embedding_2, k=1)
     print("\nQuery results from VectorDatabase2:")
     for result in results_2:

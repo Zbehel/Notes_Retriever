@@ -5,13 +5,17 @@ description = "This project aims to help long notes writers to locate previous s
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "accelerate>=1.7.0",
     "docx>=0.2.4",
     "faiss-cpu>=1.11.0",
+    "huggingface-hub>=0.31.4",
     "pdfreader>=0.1.15",
+    "peft>=0.15.2",
     "processfiles>=0.1.4",
     "pypdf>=5.5.0",
     "python-docx>=1.1.2",
     "sentence-transformers>=4.1.0",
+    "st-copy-to-clipboard>=0.1.6",
     "streamlit>=1.45.1",
     "torch==2.2.0",
     "transformers>=4.51.3",

@@ -42,8 +42,6 @@ def process_query(query):
     return results
 
 def normalize_line_breaks(text):
-    # text = text.replace("\n", "  \n ")
-    # text = text.replace('\n', '  \n ')
     text = text.replace("\\n", "  \n ")
 
     return text

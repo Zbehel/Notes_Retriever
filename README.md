@@ -1,4 +1,11 @@
-## This project aims to help long notes writers to locate previous scripts written and drown in massive texts
+---
+title: Note Retriever
+emoji: 💻
+colorFrom: gray
+colorTo: blue
+sdk: docker
+pinned: false
+short_description: This project aims to help long notes writers to locate previ
+---
 
-docker build --no-cache -t notes_retriever .
-docker run -d -p -it 127.0.0.1:8501:8501 notes_retriever
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference

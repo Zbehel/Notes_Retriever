@@ -1,50 +1,7 @@
-# import faiss
-# import numpy as np
-# import streamlit as st
-
-# class VectorDatabase:
-#     def __init__(self):
-#         self.index = None
-#         self.chunks = []
-#         self.chunks_metadata = []
-
-#     def add_data(self, embeddings, chunks, chunks_metadata):
-#         if not embeddings:
-#             st.error("No embeddings to add to the database.")
-#             return
-#         dimension = len(embeddings[0])
-#         self.index = faiss.IndexFlatL2(dimension)
-#         self.index.add(np.array(embeddings), x=np.float32)
-#         self.chunks = chunks
-#         self.chunks_metadata = chunks_metadata
-
-#     def query(self, query_embedding, k=3):
-#         if self.index is None:
-#             st.error("Vector database is empty. Please upload files and process them first.")
-#             return []
-#         _, indices = self.index.search(np.array([query_embedding]), k=k)
-#         results = []
-#         for i in indices[0]:
-#             chunk_text = self.chunks[i]
-#             metadata = self.chunks_metadata[i]
-#             answer = get_answer(query, chunk_text)  # Corrected call
-#             results.append({
-#                 "answer": answer,
-#                 "chunk_text": chunk_text,
-#                 "file_name": metadata["file_name"],
-#                 "chunk_index": metadata["chunk_index"],
-#             })
-#         return results
-
-#     def is_empty(self):
-#         return self.index is None
-# from llm_interaction import get_answer
-
-
 import faiss
 import numpy as np
 import streamlit as st
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 from doc_preprocessing import process_files 
 
@@ -96,12 +53,12 @@ class VectorDatabase:
         self.chunks = chunks
         self.chunks_metadata = chunks_metadata
 
-    def query(self, query_embedding: List[float], k: int = 3) -> List[Dict]:
+    def query(self, query_embedding: Union[List[float], np.ndarray], k: int = 3) -> List[Dict]:
         """
         Queries the vector database for the most similar chunks to a query embedding.
 
         Args:
-            query_embedding (List[float]): The embedding of the query.
+            query_embedding (List[float] or np.ndarray): The embedding of the query.
             k (int, optional): The number of nearest neighbors to retrieve. Defaults to 3.
 
         Returns:
@@ -117,15 +74,16 @@ class VectorDatabase:
         # Ensure query_embedding is a numpy array
         query_embedding = np.array(query_embedding, dtype=np.float32).reshape(1, -1)  # Reshape for FAISS
 
-        _, indices = self.index.search(query_embedding, k=k)
+        dist, indices = self.index.search(query_embedding, k=k)
         results = []
-        for i in indices[0]:
+        for (i, j) in zip(indices[0], dist[0]):
             chunk_text = self.chunks[i]
             metadata = self.chunks_metadata[i]
             results.append({
                 "chunk_text": chunk_text,
                 "file_name": metadata["file_name"],
                 "chunk_index": metadata["chunk_index"],
+                "score": j
             })
         return results
 

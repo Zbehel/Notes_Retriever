@@ -37,7 +37,7 @@ def process_query(query):
     # query_embedding = get_embeddings([query])[0]
     # results = vector_database.query(query_embedding, k=3) # use the method
     query_embedding = get_embeddings([query])[0]  # Get the embedding for the query
-    results = vector_database.query(query_embedding, k=3)  # Get the top 2 results
+    results = vector_database.query(query_embedding, k=10)  # Get the top 2 results
 
     return results
 
@@ -47,12 +47,15 @@ def normalize_line_breaks(text):
     return text
 
 def display_results(results):
-       for i, result in enumerate(results):
-        st.subheader(f"Réponse {i+1} :")
-        st.write(f"Source File: {result['file_name']}, Chunk: {result['chunk_index']}")
-        st.subheader("Citations depuis le document :")
-        st.write(normalize_line_breaks(result["chunk_text"]))
-        st_copy_to_clipboard(normalize_line_breaks(result["chunk_text"]))
+    cpt = 1
+    for result in (results):
+        if result['score'] < 0.5:
+            st.subheader(f"Réponse {cpt+1} :")
+            st.write(f"Source File: {result['file_name']}, Chunk: {result['chunk_index']}, Score: %.2f{1-result['score']*100}%")
+            st.subheader("Citations depuis le document :")
+            st.write(normalize_line_breaks(result["chunk_text"]))
+            st_copy_to_clipboard(normalize_line_breaks(result["chunk_text"]))
+            cpt += 1
 
 
 if __name__ == "__main__":

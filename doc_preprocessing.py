@@ -67,7 +67,7 @@ def get_embeddings(texts)-> np.ndarray:
         return embeddings
     except Exception as e:
         st.error(f"Error generating embeddings: {e}")
-        return []
+        return np.array([])
 
 def process_files(files):
     all_chunks = []

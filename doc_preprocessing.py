@@ -6,8 +6,8 @@ import streamlit as st
 import numpy as np
 import os
 
-emb_model = "intfloat/multilingual-e5-large-instruct"
-emb_model2 = "DeepPavlov/distilrubert-small-cased-conversational"
+# emb_model_ = "intfloat/multilingual-e5-large-instruct"
+emb_model = "intfloat/multilingual-e5-base"
 def extract_text(file):
     text = ""
     # Check if the input is a file path (string) or a file-like object

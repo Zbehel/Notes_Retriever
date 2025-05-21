@@ -75,6 +75,7 @@ class VectorDatabase:
         query_embedding = np.array(query_embedding, dtype=np.float32).reshape(1, -1)  # Reshape for FAISS
 
         dist, indices = self.index.search(query_embedding, k=k)
+        
         results = []
         for (i, j) in zip(indices[0], dist[0]):
             chunk_text = self.chunks[i]
